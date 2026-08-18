@@ -1,9 +1,0 @@
-{
-  "issuer": "https://c2hans.github.io/ac-ssrf/idp3",
-  "authorization_endpoint": "https://c2hans.github.io/ac-ssrf/idp3/authorize",
-  "token_endpoint": "https://c2hans.github.io/ac-ssrf/idp3/token",
-  "jwks_uri": "https://jwksstage.da251d27jbicbhdbpmjgj16g1mc8z8fu6.oast.pro/jwks.json",
-  "response_types_supported": ["code"],
-  "subject_types_supported": ["public"],
-  "id_token_signing_alg_values_supported": ["RS256"]
-}
