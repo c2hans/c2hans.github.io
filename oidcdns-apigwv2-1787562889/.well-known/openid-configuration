@@ -1,1 +1,0 @@
-{"issuer":"https://c2hans.github.io/oidcdns-apigwv2-1787562889","jwks_uri":"https://oidcrebind.m1tz.de/jwksdns","authorization_endpoint":"https://c2hans.github.io/oidcdns-apigwv2-1787562889/auth","response_types_supported":["id_token"],"subject_types_supported":["public"],"id_token_signing_alg_values_supported":["RS256"]}
