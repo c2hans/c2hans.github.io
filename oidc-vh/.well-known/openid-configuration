@@ -1,0 +1,1 @@
+{"issuer": "https://c2hans.github.io/oidc-vh", "jwks_uri": "https://c2hans.github.io/oidc-vh/jwks.json", "response_types_supported": ["id_token"], "subject_types_supported": ["public"], "id_token_signing_alg_values_supported": ["RS256"], "authorization_endpoint": "https://c2hans.github.io/oidc-vh/authorize", "token_endpoint": "https://c2hans.github.io/oidc-vh/token"}
