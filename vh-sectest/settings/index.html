@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html><head><title>Settings - VH SecTest</title></head>
+<body>
+<h1>Settings</h1>
+<div id="auth-check"></div>
+<form>
+<label>Display name: <input type="text" value="Test User"></label><br>
+<label>Notification email: <input type="email" value="user@example.com"></label><br>
+<button type="submit">Save</button>
+</form>
+<nav><a href="/vh-sectest/">Home</a> | <a href="/vh-sectest/dashboard/">Dashboard</a> | <a href="/vh-sectest/profile/">Profile</a></nav>
+<script>
+var sess = document.cookie.match(/session=([^;]+)/);
+if (!sess) { document.getElementById("auth-check").innerHTML = "<p style=\"color:red\">Not authenticated. <a href=\"/vh-sectest/\">Login</a></p>"; }
+else { document.getElementById("auth-check").innerHTML = "<p>Logged in as: " + (document.cookie.match(/user=([^;]+)/)||["","unknown"])[1] + "</p>"; }
+</script>
+</body></html>
