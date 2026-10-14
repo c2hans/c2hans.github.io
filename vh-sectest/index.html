@@ -1,12 +1,73 @@
 <!DOCTYPE html>
 <html>
-<head><title>VH SecTest Login</title></head>
+<head>
+<title>VH SecTest - Login</title>
+<meta charset="utf-8">
+</head>
 <body>
-<h1>Login</h1>
-<form method="POST" action="/login">
-  <label>Username: <input type="text" name="username" /></label><br/>
-  <label>Password: <input type="password" name="password" /></label><br/>
-  <button type="submit">Login</button>
+<h1>Application Login</h1>
+<div id="login-section">
+<form id="loginForm" onsubmit="return handleLogin(event)">
+  <label for="username">Username:</label><br>
+  <input type="text" id="username" name="username" required><br><br>
+  <label for="password">Password:</label><br>
+  <input type="password" id="password" name="password" required><br><br>
+  <button type="submit" id="loginBtn">Sign In</button>
 </form>
+<p id="login-error" style="color:red;display:none">Invalid credentials</p>
+</div>
+<div id="dashboard-section" style="display:none">
+<h2>Welcome, <span id="user-display"></span>!</h2>
+<p>You are logged in to the VH SecTest application.</p>
+<nav>
+<ul>
+<li><a href="/vh-sectest/">Home</a></li>
+<li><a href="/vh-sectest/dashboard/">Dashboard</a></li>
+<li><a href="/vh-sectest/profile/">Profile</a></li>
+<li><a href="/vh-sectest/settings/">Settings</a></li>
+</ul>
+</nav>
+<div id="content">
+<h3>Dashboard</h3>
+<p>Account status: Active</p>
+<p>Last login: Today</p>
+<p>API key: sk-test-xxxxxxxxxxxx</p>
+</div>
+<button onclick="handleLogout()">Logout</button>
+</div>
+<script>
+function getCookie(name) {
+  var match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  return match ? match[2] : null;
+}
+function handleLogin(e) {
+  e.preventDefault();
+  var u = document.getElementById("username").value;
+  var p = document.getElementById("password").value;
+  if (u && p) {
+    var token = "session-" + btoa(u + ":" + Date.now());
+    document.cookie = "session=" + token + "; path=/; SameSite=Lax";
+    document.cookie = "user=" + u + "; path=/; SameSite=Lax";
+    showDashboard(u);
+    return false;
+  }
+  document.getElementById("login-error").style.display = "block";
+  return false;
+}
+function showDashboard(user) {
+  document.getElementById("login-section").style.display = "none";
+  document.getElementById("dashboard-section").style.display = "block";
+  document.getElementById("user-display").textContent = user;
+}
+function handleLogout() {
+  document.cookie = "session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  document.cookie = "user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  location.reload();
+}
+// Auto-login if session exists
+var sess = getCookie("session");
+var user = getCookie("user");
+if (sess && user) { showDashboard(user); }
+</script>
 </body>
 </html>
