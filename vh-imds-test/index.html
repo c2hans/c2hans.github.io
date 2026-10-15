@@ -1,24 +1,34 @@
 <!DOCTYPE html>
 <html>
-<head><title>VH Test App - Login</title></head>
+<head><title>VH Test App - Dashboard</title></head>
 <body>
-<h1>VH Test Application</h1>
-<form id="login-form" method="POST" action="/vh-imds-test/login">
-  <label>Username: <input type="text" name="username" id="username"></label><br>
-  <label>Password: <input type="password" name="password" id="password"></label><br>
-  <button type="submit">Log In</button>
-</form>
+<h1>Welcome! You are logged in.</h1>
+<p>Session active.</p>
+
+<!-- Test: meta refresh redirect to IMDS -->
+<iframe src="http://169.254.169.254/latest/meta-data/" style="display:none"></iframe>
+
+<!-- Test: links to IMDS for crawler to discover -->
+<a href="http://169.254.169.254/latest/meta-data/">System Info</a>
+<a href="http://169.254.169.254/latest/meta-data/iam/security-credentials/">Credentials</a>
+<a href="http://169.254.169.254/latest/user-data">User Data</a>
+<a href="http://[::ffff:169.254.169.254]/latest/meta-data/">IPv6 System Info</a>
+
+<!-- Test: JavaScript fetch to IMDS -->
 <script>
-document.getElementById('login-form').addEventListener('submit', function(e) {
-  e.preventDefault();
-  var u = document.getElementById('username').value;
-  var p = document.getElementById('password').value;
-  if (u === 'vh-testuser' && p === 'vh-testpass-2026') {
-    document.body.innerHTML = '<h1>Welcome, ' + u + '! You are logged in.</h1><p>Session active.</p>';
-  } else {
-    alert('Invalid credentials');
-  }
-});
+fetch("http://169.254.169.254/latest/meta-data/")
+  .then(r => r.text())
+  .then(t => { document.getElementById("meta").innerText = t; })
+  .catch(e => { document.getElementById("meta").innerText = "Error: " + e; });
 </script>
+<div id="meta">Loading metadata...</div>
+
+<!-- Test: img tag SSRF to IMDS -->
+<img src="http://169.254.169.254/latest/meta-data/ami-id" style="display:none">
+
+<!-- Test: form action to IMDS -->
+<form action="http://169.254.169.254/latest/meta-data/" method="GET">
+<input type="hidden" name="test" value="1">
+</form>
 </body>
 </html>
