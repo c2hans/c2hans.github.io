@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head><title>VH Rebind Test Login</title></head>
+<body>
+<h1>VH Rebind Test Login</h1>
+<form id="loginForm" method="POST" action="/vh-rebind/login">
+  <label>Username: <input type="text" name="username" id="username"></label><br>
+  <label>Password: <input type="password" name="password" id="password"></label><br>
+  <button type="submit">Login</button>
+</form>
+<script>
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  var u = document.getElementById("username").value;
+  var p = document.getElementById("password").value;
+  fetch("/vh-rebind/login", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({username: u, password: p})
+  }).then(r => r.text()).then(t => document.body.innerHTML = "<p>Login result: " + t + "</p>");
+});
+</script>
+</body>
+</html>
