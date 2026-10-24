@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+  <!--
+    Reconstructed login page for the Security Agent actor-URI IMDS-bypass PoC.
+    Faithful rebuild from poc_261017b/RESULTS.md (run 2026-10-17, pj-b24c67df);
+    the original served at https://poc-261017b.m1tz.de/poc-261017b/ was deleted
+    from GitHub Pages during cleanup, so these are not the exact original bytes.
+  -->
+  <html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>VH Test App - Login</title>
+  </head>
+  <body>
+    <div id="app">
+      <h1>VH Test Application</h1>
+      <form id="login-form" method="POST" action="/login">
+        <label>Username: <input type="text" name="username" id="username" autocomplete="username"></label><br>
+        <label>Password: <input type="password" name="password" id="password" autocomplete="current-password"></label><br>
+        <button type="submit" id="login-button">Log In</button>
+      </form>
+      <p id="login-error" style="color:#b00" hidden>Invalid credentials</p>
+    </div>
+
+    <script>
+    function doLogin(username, password) {
+      if (!username || !password) { return false; }
+      document.cookie = "session=authenticated; path=/; SameSite=Lax";
+      try { localStorage.setItem("session", "authenticated"); } catch (e) {}
+      return true;
+    }
+
+    function showDashboard(username) {
+      document.getElementById("app").innerHTML =
+        "<h1>Welcome, " + username + "! You are logged in.</h1>" +
+        "<p>Session active.</p>" +
+        "<nav><a href=\"/dashboard\">Dashboard</a> | <a href=\"/account\">Account</a> | <a href=\"/logout\">Log out</a></nav>";
+    }
+
+    document.getElementById("login-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var username = document.getElementById("username").value;
+      var password = document.getElementById("password").value;
+      var errEl = document.getElementById("login-error");
+      if (doLogin(username, password)) { errEl.hidden = true; showDashboard(username); }
+      else { errEl.hidden = false; }
+    });
+
+    (function () {
+      var hasCookie = /(^|;\s*)session=authenticated(;|$)/.test(document.cookie);
+      var hasLocal = false;
+      try { hasLocal = localStorage.getItem("session") === "authenticated"; } catch (e) {}
+      if (hasCookie || hasLocal) { showDashboard("user"); }
+    })();
+    </script>
+  </body>
+  </html>
+
