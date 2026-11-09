@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BDK JsBridge PoC</title>
+<style>
+body { font-family: monospace; background: #1a1a2e; color: #0f0; padding: 16px; }
+h2 { color: #e94560; }
+#log { background: #16213e; padding: 12px; border-radius: 4px; white-space: pre-wrap; }
+.ok { color: #0f0; }
+.fail { color: #e94560; }
+.info { color: #a8a8a8; }
+</style>
+</head>
+<body>
+<h2>be.bankdekremer.mobile - JsBridge PoC</h2>
+<p class="info">This page must be loaded inside the app's WebView (FAQ screen) to work.
+When loaded in a regular browser, all bridge checks will fail - that is expected.</p>
+<div id="log"></div>
+<script>
+var el = document.getElementById('log');
+function log(msg, cls) {
+    var d = document.createElement('div');
+    d.className = cls || 'info';
+    d.textContent = '[' + new Date().toISOString() + '] ' + msg;
+    el.appendChild(d);
+}
+
+log('Page loaded at: ' + window.location.href);
+log('User-Agent: ' + navigator.userAgent);
+
+// Detect if running inside Android WebView
+var isWebView = /; wv\)/.test(navigator.userAgent);
+log('In-app WebView: ' + isWebView, isWebView ? 'ok' : 'info');
+
+var xrw = '';
+try {
+    // X-Requested-With header is set automatically by Android WebView
+    // We can't read it from JS, but we note the detection
+    xrw = 'Check server logs for X-Requested-With header';
+} catch(e) {}
+
+// Check for jsBridge
+if (typeof jsBridge !== 'undefined') {
+    log('jsBridge object: FOUND (type=' + typeof jsBridge + ')', 'ok');
+
+    if (typeof jsBridge.invokeAction === 'function') {
+        log('jsBridge.invokeAction: CALLABLE (type=function)', 'ok');
+
+        try {
+            var result = jsBridge.invokeAction('{"action":"probe","source":"poc"}');
+            log('invokeAction call succeeded, returned: ' + String(result), 'ok');
+        } catch(e) {
+            log('invokeAction threw: ' + e.name + ': ' + e.message, 'fail');
+        }
+    } else {
+        log('jsBridge.invokeAction: NOT a function (type=' + typeof jsBridge.invokeAction + ')', 'fail');
+    }
+} else {
+    log('jsBridge: NOT FOUND (expected when opened outside the app WebView)', 'fail');
+}
+
+// Check for HybridWebView (MAUI bridge)
+if (typeof HybridWebView !== 'undefined') {
+    log('HybridWebView object: FOUND', 'ok');
+} else {
+    log('HybridWebView: NOT FOUND', 'info');
+}
+
+// Enumerate injected Java objects
+var found = [];
+for (var k in window) {
+    try {
+        if (window.hasOwnProperty(k) && typeof window[k] === 'object' && window[k] !== null
+            && window[k] !== window && window[k] !== document && window[k] !== navigator
+            && window[k] !== location && window[k] !== screen && window[k] !== history
+            && window[k] !== performance) {
+            var s = String(window[k]);
+            if (s.indexOf('[object') === 0 && s !== '[object Object]') {
+                found.push(k + ' (' + s + ')');
+            }
+        }
+    } catch(e) {}
+}
+if (found.length) {
+    log('Other injected objects: ' + found.join(', '), 'ok');
+} else {
+    log('No other injected Java objects detected', 'info');
+}
+</script>
+</body>
+</html>
