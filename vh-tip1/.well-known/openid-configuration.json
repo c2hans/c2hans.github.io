@@ -1,1 +1,0 @@
-{"issuer": "https://c2hans.github.io/vh-tip1", "jwks_uri": "https://c2hans.github.io/vh-tip1/jwks.json", "authorization_endpoint": "https://c2hans.github.io/vh-tip1/authorize", "token_endpoint": "https://c2hans.github.io/vh-tip1/token", "response_types_supported": ["id_token", "code"], "subject_types_supported": ["public"], "id_token_signing_alg_values_supported": ["RS256"]}
