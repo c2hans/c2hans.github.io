@@ -1,0 +1,9 @@
+{
+  "client_id": "https://c2hans.github.io/cimd/meta.json",
+  "client_name": "vh-cimd-canary",
+  "token_endpoint_auth_method": "none",
+  "redirect_uris": ["https://example.com/cb"],
+  "grant_types": ["authorization_code"],
+  "response_types": ["code"],
+  "scope": "openid"
+}
