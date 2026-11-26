@@ -1,0 +1,1 @@
+{"client_name": "canary-impact", "token_endpoint_auth_method": "none", "redirect_uris": ["https://example.com/cb"], "grant_types": ["authorization_code"], "response_types": ["code"]}
